@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class=reader_menu>
+        <h3>Reader</h3>
+        <p>Description - lorem lorem.</p>
+        <form  action="" method="post" role="form">
+            <p>{{ reader_form.link_field.label }} {{ reader_form.link_field(size=25) }} {{ reader_form.select}} {{ reader_form.select_button }}</p>
+            <p>{{reader_form.nouns_display.label}} {{reader_form.nouns_display}} {{reader_form.nouns_amount.label}} {{reader_form.nouns_amount(size=1)}}</p>
+            <p>{{reader_form.ent_display.label}} {{reader_form.ent_display}} {{reader_form.ent_amount.label}} {{reader_form.ent_amount(size=1)}} </p>
+            <p> add keywords flash here</p>
+            <p>{{ reader_form.summary_display.label }} {{ reader_form.summary_display }}</p>
+            <p>{{ reader_form.graphs_display.label }} {{ reader_form.graphs_display }}</p>
+            <p>{{ reader_form.reader_mode_select.label }} {{ reader_form.reader_mode_select }}</p>
+        </form>
+        <hr>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+              <br>
+              <p> </p>
+              {% for message in messages %}
+                  {% if "Error" not in message[1]: %}
+                       <div class="alert alert-info">
+                       <strong>Done: </strong> {{ message[1] }}
+                       </div>
+                  {% endif %}
+                  {% if "Error" in message[1]: %}
+                       <div class="alert alert-danger">
+                       <strong></strong> {{ message[1] }}
+                       </div>
+                  {% endif %}
+              {% endfor %}
+          {% endif %}
+    {% endwith %}
+    
+    {% if summary_part %}
+        {% if reader_form.nouns_display.data or reader_form.ent_display.data %}
+            <div class='summary'>
+                <h3>Summary</h3>
+
+                {% if reader_form.nouns_display.data %}
+                    {% if nn %}
+                         <P class="summary">Nouns: {{nn}}</P>
+                    {% endif %}
+                {% endif %}
+
+                {% if reader_form.nouns_display.data %}
+
+                    {% if eo %}
+                        <P class="summary">Organisation: {{eo}}</P>
+                    {% endif %}
+
+                    {% if ep %}
+                        <P class="summary">Persons: {{ep}}</P>
+                    {% endif %}
+
+                    {% if eg %}
+                        <P class="summary">Other entities: {{eg}}</P>
+                    {% endif %}
+
+                    {% if en %}
+                        <P class="summary">Places: {{en}}</P>
+                    {% endif %}
+
+                {% endif %}
+
+                <hr>
+            </div>
+        {% endif %}
+    {% endif %}
+
+
+
+    {% if graphs %}
+        <div class='graphs'>
+
+            <h3>Graphs:</h3>
+            {% for graph in graphs %}
+                <img src="{{ graph }}" alt='Graph'>
+            {% endfor %}
+
+            <hr>
+        </div>
+    {% endif %}
+
+{% if spanned_test %}
+    <p></p>
+    <div class='keyword_sentences'>
+      {{spanned_test|safe}}
+      <hr>
+    </div>
+{% endif %}
+
+
+<script>
+function spanIt(ElId, btnName, repr_words, dots_part) {
+  var dots = document.getElementById(dots_part);
+  var moreText = document.getElementById(ElId);
+  var btnText = document.getElementById(btnName);
+
+  if (dots.style.display === "none") {
+    dots.style.display = "inline";
+    btnText.innerHTML = '<p><font size="2">' + repr_words + " (click to show)</p>" ; 
+    moreText.style.display = "none";
+  } else {
+    dots.style.display = "none";
+    btnText.innerHTML = '<p><font size="2">[hide]';
+    moreText.style.display = "inline";
+  }
+}
+</script>
+
+
+{% endblock %}
